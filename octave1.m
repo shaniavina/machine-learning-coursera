@@ -1,4 +1,5 @@
-%% Change Octave prompt  
+%%%%%%%%%%%%%%%Basic Operations
+%% Change Octave prompt
 PS1('>> ');
 %% Change working directory in windows example:
 cd 'c:/path/to/desired/directory name'
@@ -56,3 +57,184 @@ I = eye(4)    % 4x4 identity matrix
 help eye
 help rand
 help help
+
+%%%%%%%%%%%%%%Moving Data Around
+%% dimensions
+sz = size(A) % 1x2 matrix: [(number of rows) (number of columns)]
+size(A,1)  % number of rows
+size(A,2)  % number of cols
+length(v)  % size of longest dimension
+
+
+%% loading data
+pwd    % show current directory (current path)
+cd 'C:\Users\ang\Octave files'   % change directory
+ls     % list files in current directory
+load q1y.dat    % alternatively, load('q1y.dat')
+load q1x.dat
+who    % list variables in workspace
+whos   % list variables in workspace (detailed view)
+clear q1y       % clear w/ no argt clears all
+v = q1x(1:10);  % first 10 elements of q1x (counts down the columns)
+save hello.mat v;   % save variable v into file hello.mat
+save hello.txt v -ascii; % save as ascii
+% fopen, fread, fprintf, fscanf also work  [[not needed in class]]
+
+%% indexing
+A(3,2)  % indexing is (row,col)
+A(2,:)  % get the 2nd row.
+% ":" means every element along that dimension
+A(:,2)  % get the 2nd col
+A([1 3],:) % print all  the elements of rows 1 and 3
+
+A(:,2) = [10; 11; 12]     % change second column
+A = [A, [100; 101; 102]]; % append column vec
+A(:) % Select all elements as a column vector.
+
+% Putting data together
+A = [1 2; 3 4; 5 6]
+B = [11 12; 13 14; 15 16] % same dims as A
+C = [A B] or [A,B]- concatenating A and B matrices side by side
+C = [A; B] - Concatenating A and B top and bottom
+
+%%%%%%%%%%%%%%%%%%%Computing on Data
+%% initialize variables
+A = [1 2;3 4;5 6]
+B = [11 12;13 14;15 16]
+C = [1 1;2 2]
+v = [1;2;3]
+
+%% matrix operations
+A * C  % matrix multiplication
+A .* B % element-wise multiplication
+% A .* C  or A * B gives error - wrong dimensions
+A .^ 2 % element-wise square of each element in A
+1./v   % element-wise reciprocal
+log(v)  % functions like this operate element-wise on vecs or matrices
+exp(v)
+abs(v)
+
+-v  % -1*v
+
+v + ones(length(v), 1)
+% v + 1  % same
+
+A'  % matrix transpose
+
+%% misc useful functions
+
+% max  (or min)
+a = [1 15 2 0.5]
+val = max(a)
+[val,ind] = max(a) % val -  maximum element of the vector a and index - index value where maximum occur
+val = max(A) % if A is matrix, returns max from each column
+
+% find
+a < 3
+find(a < 3)
+A = magic(3)
+[r,c] = find(A>=7)  % row, column indices for values matching comparison
+
+% sum, prod
+sum(a)
+prod(a)
+floor(a) % or ceil(a)
+max(rand(3),rand(3))
+max(A,[],1) -  maximum along columns(defaults to columns - max(A,[]))
+min(A,[],2) - maximum along rows
+A = magic(9)
+sum(A,1)
+sum(A,2)
+sum(sum( A .* eye(9) ))
+sum(sum( A .* flipud(eye(9)) ))
+
+
+% Matrix inverse (pseudo-inverse)
+pinv(A)        % inv(A'*A)*A'
+                     
+%%%%%%%%%%%%%%%%%Plotting Data
+                     %% plotting
+                     t = [0:0.01:0.98];
+                     y1 = sin(2*pi*4*t);
+                     plot(t,y1);
+                     y2 = cos(2*pi*4*t);
+                     hold on;  % "hold off" to turn off
+                     plot(t,y2,'r');
+                     xlabel('time');
+                     ylabel('value');
+                     legend('sin','cos');
+                     title('my plot');
+                     print -dpng 'myPlot.png'
+                     close;           % or,  "close all" to close all figs
+                     figure(1); plot(t, y1);
+                     figure(2); plot(t, y2);
+                     figure(2), clf;  % can specify the figure number
+                     subplot(1,2,1);  % Divide plot into 1x2 grid, access 1st element
+                     plot(t,y1);
+                     subplot(1,2,2);  % Divide plot into 1x2 grid, access 2nd element
+                     plot(t,y2);
+                     axis([0.5 1 -1 1]);  % change axis scale
+                     
+                     %% display a matrix (or image) 
+                     figure;
+                     imagesc(magic(15)), colorbar, colormap gray;
+                     % comma-chaining function calls.  
+                     a=1,b=2,c=3
+                     a=1;b=2;c=3;
+
+                     
+%%%%%%%%%%%%%%%%Control statements: for, while, if statements
+                     v = zeros(10,1);
+                     for i=1:10,
+                     v(i) = 2^i;
+                     end;
+                     % Can also use "break" and "continue" inside for and while loops to control execution.
+                     
+                     i = 1;
+                     while i <= 5,
+                     v(i) = 100;
+                     i = i+1;
+                     end
+                     
+                     i = 1;
+                     while true, 
+                     v(i) = 999; 
+                     i = i+1;
+                     if i == 6,
+                     break;
+                     end;
+                     end
+                     
+                     if v(1)==1,
+                     disp('The value is one!');
+                     elseif v(1)==2,
+                     disp('The value is two!');
+                     else
+                     disp('The value is not one or two!');
+                     end
+                     
+%%%%%%%%%%%%%%%%%Functions
+                     function y = squareThisNumber(x)
+                     
+                     y = x^2;
+                     
+                     % Navigate to directory:
+                     cd /path/to/function
+                     
+                     % Call the function:
+                     functionName(args)
+                     
+                     % To add the path for the current session of Octave:
+                     addpath('/path/to/function/')
+                     
+                     % To remember the path for future sessions of Octave, after executing addpath above, also do:
+                     savepath
+                     
+%%%%%%%%%%%%%%%Vectorization
+%with loops
+                     prediction = 0.0;
+                     for j = 1:n+1,
+                     prediction += theta(j) * x(j);
+                     end;
+%with Vectorization
+                     prediction = theta' * x;
